@@ -14,6 +14,11 @@ const router = createRouter({
       name: 'book-details',
       component: () => import('../views/BookDetails.vue'),
     },
+    {
+      path: '/:catchAll(.*)',
+      name: 'page-not-found',
+      component: () => import('../views/PageNotFound.vue'),
+    },
   ],
 })
 
