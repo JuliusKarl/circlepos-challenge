@@ -19,7 +19,7 @@ onMounted(async () => {
   error.value = false
 
   await axios
-    .get('http://localhost:8000/books')
+    .get(import.meta.env.VITE_API_URL + '/books')
     .then((response) => (bookList.value = response.data.books))
     .catch((error) => {
       error.value = true
@@ -30,7 +30,7 @@ onMounted(async () => {
 
 <template>
   <v-row
-    ><v-col cols="12" md="4" v-for="book in bookList" :key="book.id">
+    ><v-col cols="12" md="3" v-for="book in bookList" :key="book.id">
       <v-card @click="navigateToBook(book.id)">
         <v-card-item>
           <v-card-title>{{ book.title }}</v-card-title>

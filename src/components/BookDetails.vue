@@ -15,7 +15,7 @@ onMounted(async () => {
   error.value = false
 
   await axios
-    .get('http://localhost:8000/books/' + route.params.id)
+    .get(import.meta.env.VITE_API_URL + '/books/' + route.params.id)
     .then((response) => {
       book.value = response.data.book
       loading.value = false
