@@ -4,65 +4,115 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 
+// UI Components
+import { Card, Button, Skeleton, Dialog } from 'primevue'
+
 // Variables
-const loading = ref(true)
+const isLoading = ref(true)
+const isPurchasing = ref(false)
+const showSuccessModal = ref(false)
+const transactionResponseHeader = ref()
 const book = ref()
-const error = ref(false)
 const route = useRoute()
+
+// Functions
+const buyNow = async () => {
+  transactionResponseHeader.value = ''
+  isPurchasing.value = true
+  // Check if in stock
+  // Purchase
+  await axios
+    .post(import.meta.env.VITE_API_URL + '/books/' + route.params.id + '/purchase')
+    .then((response) => {
+      transactionResponseHeader.value = response.data.message
+      isPurchasing.value = false
+      showSuccessModal.value = true
+    })
+    .catch((error) => {
+      console.error(error)
+      transactionResponseHeader.value = error.response.data.message
+      isPurchasing.value = false
+    })
+
+  // Load successful modal
+}
+
+const closeModal = () => {
+  showSuccessModal.value = false
+  transactionResponseHeader.value = ''
+}
 
 // Hooks
 onMounted(async () => {
-  error.value = false
-
   await axios
     .get(import.meta.env.VITE_API_URL + '/books/' + route.params.id)
     .then((response) => {
       book.value = response.data.book
-      loading.value = false
+      isLoading.value = false
     })
     .catch((error) => {
       console.error(error)
-      error.value = true
-      loading.value = false
+      isLoading.value = false
     })
 })
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="12" md="6">
-      <v-card class="card">
-        <div class="loading-container">
-          <v-progress-circular
-            model-value="30"
-            indeterminate
-            v-show="loading"
-            class="loading-spinner"
-          ></v-progress-circular>
-        </div>
-
-        <div v-show="!loading">
-          <v-card-item>
-            <v-card-title>{{ book?.title }}</v-card-title>
-            <v-card-subtitle>{{ book?.author }}</v-card-subtitle>
-          </v-card-item>
-          <v-card-actions>
-            <v-btn>Buy Now</v-btn>
-          </v-card-actions>
-        </div>
-      </v-card></v-col
-    ></v-row
+  <h1>Book Details</h1>
+  <div
+    v-if="isLoading"
+    class="w-3 h-8rem flex flex-column justify-content-between skeleton-container"
   >
+    <Skeleton class="mb-2 h-2rem"></Skeleton>
+    <Skeleton class="mb-2 w-6 h-1rem"></Skeleton>
+    <Skeleton class="h-2rem"></Skeleton>
+  </div>
+
+  <Card class="w-3" v-show="!isLoading">
+    <template #title>{{ book?.title }}</template>
+    <template #subtitle>{{ book?.author }}</template>
+
+    <template #footer>
+      <div class="flex gap-4 mt-1">
+        <div class="align-content-center">${{ book?.price }}</div>
+        <Button
+          :loading="isPurchasing"
+          class="w-full"
+          @click="buyNow()"
+          :disabled="book?.availableStock <= 0"
+        >
+          <span v-if="book?.availableStock <= 0">Out of stock</span>
+          <span v-else-if="!isPurchasing">Buy now</span>
+        </Button>
+      </div>
+    </template>
+  </Card>
+  <p class="error-text" v-show="transactionResponseHeader && !showSuccessModal">
+    {{ transactionResponseHeader }}
+  </p>
+
+  <Dialog
+    v-model:visible="showSuccessModal"
+    :header="transactionResponseHeader"
+    modal
+    :closable="false"
+    :draggable="false"
+    class="modal"
+  >
+    <p class="block">
+      Your purchase of <b>{{ book?.title }}</b> by {{ book?.author }} was successful.
+    </p>
+    <Button label="Close" @click="closeModal()" />
+  </Dialog>
 </template>
 
 <style scoped>
-.card {
-  min-height: 150px;
-  align-content: center;
+.skeleton-container {
+  background-color: #18181b;
+  border-radius: 12px;
+  padding: 1rem;
 }
-
-.loading-container {
-  width: 100%;
-  text-align: center;
+.error-text {
+  color: #ff0000;
 }
 </style>
