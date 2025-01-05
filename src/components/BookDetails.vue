@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 
 // UI Components
-import { Card, Button, Skeleton, Dialog } from 'primevue'
+import { Button, Skeleton, Dialog } from 'primevue'
 
 // Variables
 const isLoading = ref(true)
@@ -22,10 +22,11 @@ const buyNow = async () => {
 
   await axios
     .post(import.meta.env.VITE_API_URL + '/books/' + route.params.id + '/purchase')
-    .then((response) => {
+    .then(async (response) => {
       transactionResponseHeader.value = response.data.message
       isPurchasing.value = false
       showSuccessModal.value = true
+      await getBookDetails()
     })
     .catch((error) => {
       console.error(error)
@@ -34,13 +35,7 @@ const buyNow = async () => {
     })
 }
 
-const closeModal = () => {
-  showSuccessModal.value = false
-  transactionResponseHeader.value = ''
-}
-
-// Hooks
-onMounted(async () => {
+const getBookDetails = async () => {
   await axios
     .get(import.meta.env.VITE_API_URL + '/books/' + route.params.id)
     .then((response) => {
@@ -51,39 +46,49 @@ onMounted(async () => {
       console.error(error)
       isLoading.value = false
     })
+}
+
+const closeModal = () => {
+  showSuccessModal.value = false
+  transactionResponseHeader.value = ''
+}
+
+// Hooks
+onMounted(async () => {
+  await getBookDetails()
 })
 </script>
 
 <template>
-  <h1>Book Details</h1>
-  <div
-    v-if="isLoading"
-    class="w-3 h-8rem flex flex-column justify-content-between skeleton-container"
-  >
-    <Skeleton class="mb-2 h-2rem"></Skeleton>
-    <Skeleton class="mb-2 w-6 h-1rem"></Skeleton>
-    <Skeleton class="h-2rem"></Skeleton>
+  <div class="flex justify-content-center">
+    <div v-if="!isLoading" class="inline-block">
+      <h1>{{ book?.title }}</h1>
+      <p>Author: {{ book?.author }}</p>
+      <p>ISBN: {{ book?.isbn }}</p>
+      <p>Stock: {{ book?.availableStock }}</p>
+      <p>Price: ${{ book?.price }}</p>
+
+      <Button
+        class="mt-2"
+        :loading="isPurchasing"
+        @click="buyNow()"
+        :disabled="book?.availableStock <= 0"
+      >
+        <span v-if="book?.availableStock <= 0">Out of stock</span>
+        <span v-else-if="!isPurchasing">Buy now</span>
+      </Button>
+    </div>
+
+    <div v-if="isLoading" class="inline-block w-2 pt-3">
+      <Skeleton class="mb-4 h-3rem"></Skeleton>
+      <Skeleton class="mb-3 w-9 h-1rem"></Skeleton>
+      <Skeleton class="mb-3 w-8 h-1rem"></Skeleton>
+      <Skeleton class="mb-3 w-4 h-1rem"></Skeleton>
+      <Skeleton class="mb-4 w-6 h-1rem"></Skeleton>
+      <Skeleton class="w-5 h-3rem"></Skeleton>
+    </div>
   </div>
 
-  <Card class="w-3" v-show="!isLoading">
-    <template #title>{{ book?.title }}</template>
-    <template #subtitle>{{ book?.author }}</template>
-
-    <template #footer>
-      <div class="flex gap-4 mt-1">
-        <div class="align-content-center">${{ book?.price }}</div>
-        <Button
-          :loading="isPurchasing"
-          class="w-full"
-          @click="buyNow()"
-          :disabled="book?.availableStock <= 0"
-        >
-          <span v-if="book?.availableStock <= 0">Out of stock</span>
-          <span v-else-if="!isPurchasing">Buy now</span>
-        </Button>
-      </div>
-    </template>
-  </Card>
   <p class="error-text" v-show="transactionResponseHeader && !showSuccessModal">
     {{ transactionResponseHeader }}
   </p>
@@ -104,10 +109,8 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.skeleton-container {
+.card-bg {
   background-color: #18181b;
-  border-radius: 12px;
-  padding: 1rem;
 }
 .error-text {
   color: #ff0000;
