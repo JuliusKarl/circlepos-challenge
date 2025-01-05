@@ -19,8 +19,7 @@ const route = useRoute()
 const buyNow = async () => {
   transactionResponseHeader.value = ''
   isPurchasing.value = true
-  // Check if in stock
-  // Purchase
+
   await axios
     .post(import.meta.env.VITE_API_URL + '/books/' + route.params.id + '/purchase')
     .then((response) => {
@@ -33,8 +32,6 @@ const buyNow = async () => {
       transactionResponseHeader.value = error.response.data.message
       isPurchasing.value = false
     })
-
-  // Load successful modal
 }
 
 const closeModal = () => {
