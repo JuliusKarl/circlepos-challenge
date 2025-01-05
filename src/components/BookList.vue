@@ -63,6 +63,7 @@ onMounted(async () => {
     })
     .catch((error) => {
       console.error(error)
+      isLoading.value = false
     })
 })
 </script>
@@ -95,9 +96,28 @@ onMounted(async () => {
     </div>
   </div>
 
+  <div v-show="isLoading">
+    <div class="p-2 col-12 lg:col-3 inline-block" v-for="index in 20" :key="index">
+      <div class="w-full border-round-2xl p-3 flex flex-column justify-content-between card-bg">
+        <Skeleton class="mb-2 h-2rem"></Skeleton>
+        <Skeleton class="mb-2 w-6 h-1rem"></Skeleton>
+        <Skeleton class="h-2rem"></Skeleton>
+      </div>
+    </div>
+  </div>
+
+  <div v-show="!isLoading && allBooks.length <= 0">
+    <div class="col-12 text-center">No books found</div>
+  </div>
+
   <div class="grid" v-show="!isLoading">
     <div v-show="sortView === 'GRID'" class="w-full">
-      <div class="p-2 col-12 lg:col-3 inline-block" v-for="book in booksToRender" :key="book.id">
+      <div
+        class="p-2 col-12 lg:col-3 inline-block"
+        v-show="booksToRender.length >= 0"
+        v-for="book in booksToRender"
+        :key="book.id"
+      >
         <Card>
           <template #title>{{ book.title }}</template>
           <template #subtitle>{{ book.author }}</template>
@@ -127,16 +147,6 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-show="isLoading">
-      <div class="p-2 col-12 lg:col-3 inline-block" v-for="index in 20" :key="index">
-        <div class="border-round-2xl p-3 flex flex-column justify-content-between card-bg">
-          <Skeleton class="mb-2 h-2rem"></Skeleton>
-          <Skeleton class="mb-2 w-6 h-1rem"></Skeleton>
-          <Skeleton class="h-2rem"></Skeleton>
         </div>
       </div>
     </div>

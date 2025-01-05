@@ -61,7 +61,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex">
-    <div v-if="!isLoading" class="inline-block">
+    <div v-if="!isLoading && book" class="inline-block">
       <h1>{{ book?.title }}</h1>
       <p>Author: {{ book?.author }}</p>
       <p>ISBN: {{ book?.isbn }}</p>
@@ -78,6 +78,8 @@ onMounted(async () => {
         <span v-else-if="!isPurchasing">Buy now</span>
       </Button>
     </div>
+
+    <h1 v-else-if="!isLoading && !book">Book not found</h1>
 
     <div v-if="isLoading" class="inline-block w-2 pt-3">
       <Skeleton class="mb-4 h-3rem"></Skeleton>
