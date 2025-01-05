@@ -60,7 +60,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex justify-content-center">
+  <div class="flex">
     <div v-if="!isLoading" class="inline-block">
       <h1>{{ book?.title }}</h1>
       <p>Author: {{ book?.author }}</p>
