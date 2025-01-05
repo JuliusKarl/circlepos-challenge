@@ -9,7 +9,8 @@ import { Card, Button, Skeleton, Dropdown, InputText } from 'primevue'
 
 // Variables
 const isLoading = ref(true)
-const bookList = ref([])
+const allBooks = ref([])
+const booksToRender = ref([])
 const router = useRouter()
 const search = ref('')
 const sortType = ref('')
@@ -23,7 +24,7 @@ const navigateToBook = (id: number) => {
 }
 
 const toggleSort = () => {
-  bookList.value = bookList.value.reverse()
+  booksToRender.value = allBooks.value.reverse()
   sortOrder.value = sortOrder.value === 'ASC' ? 'DESC' : 'ASC'
 }
 
@@ -34,15 +35,21 @@ const toggleView = () => {
 watch(sortType, () => {
   switch (sortType.value.sort) {
     case 'Title':
-      bookList.value = bookList.value.sort((a, b) => a.title.localeCompare(b.title))
+      booksToRender.value = booksToRender.value.sort((a, b) => a.title.localeCompare(b.title))
       break
     case 'Author':
-      bookList.value = bookList.value.sort((a, b) => a.author.localeCompare(b.author))
+      booksToRender.value = booksToRender.value.sort((a, b) => a.author.localeCompare(b.author))
       break
     case 'Price':
-      bookList.value = bookList.value.sort((a, b) => a.price - b.price)
+      booksToRender.value = booksToRender.value.sort((a, b) => a.price - b.price)
       break
   }
+})
+
+watch(search, () => {
+  booksToRender.value = allBooks.value.filter((book) => {
+    return book.title.toLowerCase().includes(search.value.toLowerCase())
+  })
 })
 
 // Hooks
@@ -50,7 +57,8 @@ onMounted(async () => {
   await axios
     .get(import.meta.env.VITE_API_URL + '/books')
     .then((response) => {
-      bookList.value = response.data.books
+      allBooks.value = response.data.books
+      booksToRender.value = response.data.books
       isLoading.value = false
     })
     .catch((error) => {
@@ -80,8 +88,8 @@ onMounted(async () => {
         />
 
         <Button variant="link" @click="toggleView()"
-          ><div v-show="sortView === 'LIST'"><span class="pi pi-list" /></div>
-          <div v-show="sortView === 'GRID'"><span class="pi pi-th-large" /></div
+          ><div v-show="sortView === 'GRID'"><span class="pi pi-list" /></div>
+          <div v-show="sortView === 'LIST'"><span class="pi pi-th-large" /></div
         ></Button>
       </div>
     </div>
@@ -89,7 +97,7 @@ onMounted(async () => {
 
   <div class="grid" v-show="!isLoading">
     <div v-show="sortView === 'GRID'" class="w-full">
-      <div class="p-2 col-12 lg:col-3 inline-block" v-for="book in bookList" :key="book.id">
+      <div class="p-2 col-12 lg:col-3 inline-block" v-for="book in booksToRender" :key="book.id">
         <Card>
           <template #title>{{ book.title }}</template>
           <template #subtitle>{{ book.author }}</template>
@@ -105,7 +113,7 @@ onMounted(async () => {
     </div>
 
     <div v-show="sortView === 'LIST'" class="w-full">
-      <div class="p-2 col-12 inline-block" v-for="book in bookList" :key="book.id">
+      <div class="p-2 col-12 inline-block" v-for="book in booksToRender" :key="book.id">
         <div class="border-none border-round-xl card-bg px-4">
           <div class="flex justify-content-between">
             <div>
