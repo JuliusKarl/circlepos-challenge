@@ -25,16 +25,21 @@ const props = defineProps({
 </script>
 
 <template>
-  <div aria-label="book-card" class="border-none border-round-xl card-bg px-4">
+  <div aria-label="book-card" class="p-card border-none border-round-xl px-4 shadow-2">
     <div class="flex justify-content-between">
       <div>
         <p class="text-xl font-medium">{{ props.book.title }}</p>
-        <p>{{ props.book.author }}</p>
+        <p class="text-500">{{ props.book.author }}</p>
       </div>
       <div class="grid gap-4 align-content-center">
         <div class="align-content-center">${{ props.book?.price }}</div>
         <div class="align-content-center">
-          <Button label="View Details" @click="navigateToBook(props.book.id)" />
+          <Button
+            role="button"
+            aria-pressed="false"
+            label="View Details"
+            @click="navigateToBook(props.book.id)"
+          />
         </div>
       </div>
     </div>

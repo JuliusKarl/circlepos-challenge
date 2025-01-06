@@ -25,14 +25,20 @@ const props = defineProps({
 </script>
 
 <template>
-  <Card aria-label="book-card">
+  <Card aria-label="book-card" class="shadow-2">
     <template #title>{{ props.book.title }}</template>
     <template #subtitle>{{ props.book.author }}</template>
 
     <template #footer>
       <div class="align-content-center mt-1 mb-3">${{ props.book?.price }}</div>
       <div class="flex gap-4">
-        <Button label="View Details" class="w-1/2" @click="navigateToBook(props.book.id)" />
+        <Button
+          role="button"
+          aria-pressed="false"
+          label="View Details"
+          class="w-1/2"
+          @click="navigateToBook(props.book.id)"
+        />
       </div>
     </template>
   </Card>

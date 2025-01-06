@@ -1,4 +1,6 @@
 import './assets/main.css'
+import '/node_modules/primeflex/primeflex.css'
+import 'primeicons/primeicons.css'
 
 // PrimeVue
 import PrimeVue from 'primevue/config'
@@ -17,6 +19,11 @@ app.use(router)
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
+    options: {
+      prefix: '',
+      darkModeSelector: 'system',
+      cssLayer: false,
+    },
   },
 })
 

@@ -5,7 +5,7 @@ import { Skeleton } from 'primevue'
 <template>
   <div
     aria-label="skeleton-card"
-    class="w-full border-round-2xl p-3 flex flex-column justify-content-between card-bg"
+    class="w-full border-round-2xl p-3 flex flex-column justify-content-between"
   >
     <Skeleton class="mb-2 h-2rem"></Skeleton>
     <Skeleton class="mb-2 w-6 h-1rem"></Skeleton>

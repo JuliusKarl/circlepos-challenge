@@ -23,15 +23,15 @@ const buyNow = async () => {
   await axios
     .post(import.meta.env.VITE_API_URL + '/books/' + route.params.id + '/purchase')
     .then(async (response) => {
-      transactionResponseHeader.value = response.data.message
       isPurchasing.value = false
       showSuccessModal.value = true
+      transactionResponseHeader.value = response.data.message
       await getBookDetails()
     })
     .catch((error) => {
       console.error(error)
-      transactionResponseHeader.value = error.response.data.message
       isPurchasing.value = false
+      transactionResponseHeader.value = error.response.data.message
     })
 }
 
@@ -60,45 +60,50 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex">
-    <div v-if="!isLoading && book" class="inline-block">
-      <h1>{{ book?.title }}</h1>
-      <p>Author: {{ book?.author }}</p>
-      <p>ISBN: {{ book?.isbn }}</p>
-      <p>Stock: {{ book?.availableStock }}</p>
-      <p>Price: ${{ book?.price }}</p>
-
+  <div class="flex w-full justify-content-center">
+    <div v-if="!isLoading && book" class="inline-block" aria-label="book-details">
+      <p class="text-6xl lg:text-7xl m-0" id="title">{{ book?.title }}</p>
+      <p class="text-2xl lg:text-4xl m-0 mb-6 text-500" id="author">
+        {{ book?.author }}
+      </p>
+      <p id="isbn"><span class="font-bold">ISBN:</span> {{ book?.isbn }}</p>
+      <p id="stock"><span class="font-bold">Stock:</span> {{ book?.availableStock }}</p>
+      <p id="price"><span class="font-bold">Price:</span> ${{ book?.price }}</p>
       <Button
-        class="mt-2"
-        :loading="isPurchasing"
+        role="button"
+        aria-pressed="false"
+        class="mt-4 w-full"
         @click="buyNow()"
+        :loading="isPurchasing"
         :disabled="book?.availableStock <= 0"
       >
         <span v-if="book?.availableStock <= 0">Out of stock</span>
         <span v-else-if="!isPurchasing">Buy now</span>
       </Button>
+      <p
+        id="error-text"
+        class="text-red-500"
+        v-show="transactionResponseHeader && !showSuccessModal"
+      >
+        {{ transactionResponseHeader }}
+      </p>
     </div>
 
-    <h1 v-else-if="!isLoading && !book">Book not found</h1>
-
-    <div v-if="isLoading" class="inline-block w-2 pt-3">
-      <Skeleton class="mb-4 h-3rem"></Skeleton>
-      <Skeleton class="mb-3 w-9 h-1rem"></Skeleton>
-      <Skeleton class="mb-3 w-8 h-1rem"></Skeleton>
-      <Skeleton class="mb-3 w-4 h-1rem"></Skeleton>
+    <div v-if="isLoading" class="inline-block w-full lg:w-5" aria-label="loading-cards">
+      <Skeleton class="mb-3 h-4rem"></Skeleton>
+      <Skeleton class="mb-6 w-6 h-2rem"></Skeleton>
       <Skeleton class="mb-4 w-6 h-1rem"></Skeleton>
-      <Skeleton class="w-5 h-3rem"></Skeleton>
+      <Skeleton class="mb-4 w-6 h-1rem"></Skeleton>
+      <Skeleton class="mb-5 w-6 h-1rem"></Skeleton>
+      <Skeleton class="h-2rem"></Skeleton>
     </div>
   </div>
 
-  <p class="error-text" v-show="transactionResponseHeader && !showSuccessModal">
-    {{ transactionResponseHeader }}
-  </p>
-
   <Dialog
+    modal
     v-model:visible="showSuccessModal"
     :header="transactionResponseHeader"
-    modal
+    :position="'top'"
     :closable="false"
     :draggable="false"
     class="modal"
@@ -109,12 +114,3 @@ onMounted(async () => {
     <Button label="Close" @click="closeModal()" />
   </Dialog>
 </template>
-
-<style scoped>
-.card-bg {
-  background-color: #18181b;
-}
-.error-text {
-  color: #ff0000;
-}
-</style>
