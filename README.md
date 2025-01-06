@@ -24,9 +24,3 @@ npm install
 ```sh
 npm run dev
 ```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
