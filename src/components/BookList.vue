@@ -1,70 +1,43 @@
 <script setup lang="ts">
 // Imports
-import { ref, onMounted, watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { useBooksStore } from '/src/stores/books'
+import { storeToRefs } from 'pinia'
 
 // UI Components
 import { Card, Button, Skeleton, Dropdown, InputText } from 'primevue'
 
 // Variables
-const isLoading = ref(true)
-const allBooks = ref([])
-const booksToRender = ref([])
 const router = useRouter()
-const search = ref('')
-const sortType = ref('')
-const sortOrder: 'ASC' | 'DESC' = ref('ASC')
-const sortView: 'LIST' | 'GRID' = ref('LIST')
-const sortOptions = [{ sort: 'Title' }, { sort: 'Author' }, { sort: 'Price' }]
+const {
+  isLoading,
+  booksToRender,
+  searchQuery,
+  sortType,
+  sortView,
+  sortOptions,
+  getSearchQuery,
+  getSortType,
+} = storeToRefs(useBooksStore())
+const { fetchBooks, toggleSort, toggleView, sortByType, searchByText } = useBooksStore()
 
 // Functions
 const navigateToBook = (id: number) => {
   router.push({ name: 'book-details', params: { id: id } })
 }
 
-const toggleSort = () => {
-  booksToRender.value = allBooks.value.reverse()
-  sortOrder.value = sortOrder.value === 'ASC' ? 'DESC' : 'ASC'
-}
-
-const toggleView = () => {
-  sortView.value = sortView.value === 'LIST' ? 'GRID' : 'LIST'
-}
-
-watch(sortType, () => {
-  switch (sortType.value.sort) {
-    case 'Title':
-      booksToRender.value = booksToRender.value.sort((a, b) => a.title.localeCompare(b.title))
-      break
-    case 'Author':
-      booksToRender.value = booksToRender.value.sort((a, b) => a.author.localeCompare(b.author))
-      break
-    case 'Price':
-      booksToRender.value = booksToRender.value.sort((a, b) => a.price - b.price)
-      break
-  }
+watch(getSearchQuery, () => {
+  searchByText(search.value)
 })
 
-watch(search, () => {
-  booksToRender.value = allBooks.value.filter((book) => {
-    return book.title.toLowerCase().includes(search.value.toLowerCase())
-  })
+watch(getSortType, () => {
+  sortByType(sortType.value.sort)
 })
 
 // Hooks
-onMounted(async () => {
-  await axios
-    .get(import.meta.env.VITE_API_URL + '/books')
-    .then((response) => {
-      allBooks.value = response.data.books
-      booksToRender.value = response.data.books
-      isLoading.value = false
-    })
-    .catch((error) => {
-      console.error(error)
-      isLoading.value = false
-    })
+onMounted(() => {
+  fetchBooks()
 })
 </script>
 
@@ -72,7 +45,7 @@ onMounted(async () => {
   <div class="grid">
     <h1 class="col-12 lg:col-4 inline-block">All Books</h1>
     <div class="col-12 lg:col-4 align-content-center">
-      <InputText class="w-full" type="text" v-model="search" placeholder="Find a book..." />
+      <InputText class="w-full" type="text" v-model="searchQuery" placeholder="Find a book..." />
     </div>
     <div class="col-12 lg:col-4 text-right align-content-center">
       <div>
@@ -106,7 +79,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <div v-show="!isLoading && allBooks.length <= 0">
+  <div v-show="!isLoading && booksToRender.length <= 0">
     <div class="col-12 text-center">No books found</div>
   </div>
 
