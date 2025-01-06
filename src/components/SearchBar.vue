@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Imports
 import { watch } from 'vue'
-import { useBooksStore } from './src/stores/books'
+import { useBooksStore } from '/src/stores/books'
 import { storeToRefs } from 'pinia'
 
 // UI Components
