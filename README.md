@@ -11,6 +11,12 @@ This project achieves the requirements of the Circlepos Frontend Developer chall
 >with additional details (similarly, as provided by the API).
 >- The item page must allow the user to purchase a copy of the book via a provided endpoint.
 
+## Demo
+Live: https://circlepos-challenge.vercel.app
+
+Video: https://drive.google.com/file/d/1bepVdhdk74hJDfZRt1bFN_mD1AGsKdtf/view?usp=drive_link
+
+
 ## Project Setup
 1. Setup your local dummy server API
 2. Create an .env file with a variable ```VITE_API_URL``` set to your API _e.g. ```VITE_API_URL="http://localhost:8000"```_
