@@ -26,8 +26,8 @@ const props = defineProps({
 
 <template>
   <Card aria-label="book-card" class="shadow-2">
-    <template #title>{{ props.book.title }}</template>
-    <template #subtitle>{{ props.book.author }}</template>
+    <template #title>{{ props.book?.title }}</template>
+    <template #subtitle>{{ props.book?.author }}</template>
 
     <template #footer>
       <div class="align-content-center mt-1 mb-3">${{ props.book?.price }}</div>
@@ -37,7 +37,7 @@ const props = defineProps({
           aria-pressed="false"
           label="View Details"
           class="w-1/2"
-          @click="navigateToBook(props.book.id)"
+          @click="navigateToBook(props.book?.id)"
         />
       </div>
     </template>
