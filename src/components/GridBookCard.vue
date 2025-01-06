@@ -33,6 +33,7 @@ const props = defineProps({
       <div class="align-content-center mt-1 mb-3">${{ props.book?.price }}</div>
       <div class="flex gap-4">
         <Button
+          v-if="props.book"
           role="button"
           aria-pressed="false"
           label="View Details"

@@ -35,6 +35,7 @@ const props = defineProps({
         <div class="align-content-center">${{ props.book?.price }}</div>
         <div class="align-content-center">
           <Button
+            v-if="props.book"
             role="button"
             aria-pressed="false"
             label="View Details"

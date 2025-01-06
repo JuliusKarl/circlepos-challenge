@@ -8,7 +8,7 @@ export const useBooksStore = defineStore('books', {
     allBooks: ref<Book[]>([]),
     booksToRender: ref<Book[]>([]),
     searchQuery: ref(''),
-    sortType: ref(''),
+    sortType: ref({ sort: '' }),
     sortOrder: ref<SortOrder>('ASC'),
     sortView: ref<SortView>('GRID'),
     sortOptions: ref([{ sort: 'Title' }, { sort: 'Author' }, { sort: 'Price' }]),
@@ -59,7 +59,7 @@ export const useBooksStore = defineStore('books', {
       return this.searchQuery
     },
     getSortType(): string {
-      return this.sortType
+      return this.sortType.sort
     },
   },
 })
