@@ -25,7 +25,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="border-none border-round-xl card-bg px-4">
+  <div aria-label="book-card" class="border-none border-round-xl card-bg px-4">
     <div class="flex justify-content-between">
       <div>
         <p class="text-xl font-medium">{{ props.book.title }}</p>

@@ -18,7 +18,7 @@ watch(getSearchQuery, () => {
 </script>
 
 <template>
-  <div class="col-12 lg:col-4 align-content-center">
+  <div aria-label="search-input" class="col-12 lg:col-4 align-content-center">
     <InputText class="w-full" type="text" v-model="searchQuery" placeholder="Find a book..." />
   </div>
 </template>

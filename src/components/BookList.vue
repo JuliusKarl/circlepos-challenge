@@ -28,22 +28,22 @@ onMounted(() => {
 
 <template>
   <div class="grid">
-    <h1 class="col-12 lg:col-4 inline-block">All Books</h1>
+    <h1 class="col-12 lg:col-4 inline-block" id="title">All Books</h1>
     <SearchBar />
     <FilterPanel />
   </div>
 
-  <div v-show="isLoading">
+  <div v-show="isLoading" aria-labelledby="title">
     <div class="p-2 col-12 lg:col-3 inline-block" v-for="index in 20" :key="index">
       <SkeletonCard />
     </div>
   </div>
 
-  <div v-show="!isLoading && booksToRender.length <= 0">
+  <div v-show="!isLoading && booksToRender.length <= 0" aria-labelledby="title">
     <div class="col-12 text-center">No books found</div>
   </div>
 
-  <div class="grid" v-show="!isLoading">
+  <div class="grid" v-show="!isLoading" aria-labelledby="title">
     <div
       class="p-2 col-12 inline-block"
       :class="{ 'lg:col-3': sortView === 'GRID' }"

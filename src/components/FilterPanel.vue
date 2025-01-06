@@ -18,13 +18,14 @@ watch(getSortType, () => {
 </script>
 
 <template>
-  <div class="col-12 lg:col-4 text-right align-content-center">
+  <div aria-label="filter-panel" class="col-12 lg:col-4 text-right align-content-center">
     <div>
-      <Button variant="link" @click="toggleSort()"
+      <Button aria-label="order-type" variant="link" @click="toggleSort()"
         ><span class="pi pi-arrow-right-arrow-left rotate-90"
       /></Button>
 
       <Dropdown
+        aria-label="sort-type"
         v-model="sortType"
         :options="sortOptions"
         optionLabel="sort"
@@ -32,7 +33,7 @@ watch(getSortType, () => {
         class="w-auto lg:w-8rem"
       />
 
-      <Button variant="link" @click="toggleView()"
+      <Button aria-label="view-type" variant="link" @click="toggleView()"
         ><div v-show="sortView === 'GRID'"><span class="pi pi-list" /></div>
         <div v-show="sortView === 'LIST'"><span class="pi pi-th-large" /></div
       ></Button>

@@ -25,7 +25,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <Card>
+  <Card aria-label="book-card">
     <template #title>{{ props.book.title }}</template>
     <template #subtitle>{{ props.book.author }}</template>
 
