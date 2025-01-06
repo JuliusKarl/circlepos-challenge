@@ -1,8 +1,6 @@
-// https://on.cypress.io/api
-
-describe('My First Test', () => {
-  it('visits the app root url', () => {
+describe('All Books Page', () => {
+  it('is the home screen', () => {
     cy.visit('/')
-    cy.contains('h1', 'You did it!')
+    cy.contains('h1', 'All Books')
   })
 })
