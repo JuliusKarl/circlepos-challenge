@@ -1,16 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
-type Book = {
-  id: number
-  title: string
-  author: string
-  isbn: string
-  price: number
-  availableStock: number
-}
-type SortOrder = 'ASC' | 'DESC'
-type SortView = 'LIST' | 'GRID'
+import type { Book, SortOrder, SortView } from '@/types/books'
 
 export const useBooksStore = defineStore('books', {
   state: () => ({
