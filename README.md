@@ -1,41 +1,28 @@
-# circlepos-books
+# Circlepos Frontend Developer Challenge
+This project achieves the requirements of the Circlepos Frontend Developer challenge:
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+>You are tasked with developing a landing page for a bookstore site. You can retrieve the data for available books from the provided dummy server API (with documentation included) at: 
+ https://github.com/jpyepez/circle-frontend-challenge
+>
+>The site must include:
+>- A landing page which displays the list of available books and some basic information (from
+>what’s provided by the API, at your discretion).
+>- The landing page must provide a way to navigate to a dedicated page for each one of the items
+>with additional details (similarly, as provided by the API).
+>- The item page must allow the user to purchase a copy of the book via a provided endpoint.
 
 ## Project Setup
+1. Setup your local dummy server API
+2. Create an .env file with a variable ```VITE_API_URL``` set to your API _e.g. ```VITE_API_URL="http://localhost:8000"```_
+3. Install dependencies
 
 ```sh
 npm install
 ```
-
-### Compile and Hot-Reload for Development
+4. Run project
 
 ```sh
 npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
@@ -43,20 +30,3 @@ npm run test:unit
 ```sh
 npm run test:e2e:dev
 ```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-# circlepos-challenge
